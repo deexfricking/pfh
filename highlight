@@ -1,0 +1,45 @@
+local function createBox(player)
+    local torso = player.Character and player.Character:FindFirstChild("Torso")
+    if torso then
+        local box = Instance.new("BoxHandleAdornment")
+        box.Size = torso.Size
+        box.Color3 = Color3.fromRGB(255, 0, 0) -- Red color
+        box.Transparency = 0.5
+        box.Adornee = torso
+        box.Parent = torso
+    end
+end
+
+-- Function to remove the box around a player's torso
+local function removeBox(player)
+    local torso = player.Character and player.Character:FindFirstChild("Torso")
+    if torso then
+        local box = torso:FindFirstChildOfClass("BoxHandleAdornment")
+        if box then
+            box:Destroy()
+        end
+    end
+end
+
+-- Function to handle player added event
+local function onPlayerAdded(player)
+    player.CharacterAdded:Connect(function(character)
+        -- Create a box around the player's torso when the character is added
+        createBox(player)
+    end)
+end
+
+-- Function to handle player removing event
+local function onPlayerRemoving(player)
+    -- Remove the box around the player's torso when the player leaves the game
+    removeBox(player)
+end
+
+-- Loop through existing players
+for _, player in ipairs(game.Players:GetPlayers()) do
+    onPlayerAdded(player)
+end
+
+-- Listen for player added and removing events
+game.Players.PlayerAdded:Connect(onPlayerAdded)
+game.Players.PlayerRemoving:Connect(onPlayerRemoving)
